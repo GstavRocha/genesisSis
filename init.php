@@ -1,33 +1,28 @@
 <?php
-require_once ('config.php');
 
-header('Content-type: application/json');
-function getUsers() {
-    require_once ('config.php');
+require_once $_SERVER["DOCUMENT_ROOT"]. "dbdate.php";
 
-    $method = $_SERVER['REQUEST_METHOD'];
-    switch ($method){
-        case 'GET':
-            try {
-                $users = $pdo->query('SELECT nome FROM tb_user');
-                $result = $users->fetchAll(PDO::FETCH_ASSOC);
-                return $result;
-            } catch (PDOException $e) {
-                echo "Erro ao executar a consulta: " . $e->getMessage();
-                return false;
-            }
-            break;
-        default:
-            echo 'deu erro';
-            return false;
+class DbConnect{
+    private $username = dbuse;
+    private $host = dbhost;
+    private $database = dbname;
+    private $password = dbpass;
+    private $port = dbport;
+    private $conn;
+    public function __construct(){
+        $this->conn = this->connect();
     }
-}
+    public function connect()
+    {
+        $conn = new mysqli($this->host, $this->username, $this->password, $this->database, $this->port);
+        if($conn->connect_error){
+            die("conexão falhou". $conn->connect_error);
+        }
+        return $conn;
+    }
+    public function getConnection(){
+        return $this->conn;
+    }
 
-// Exemplo de uso da função
-$usersData = getUsers();
-if ($usersData !== false) {
-    echo json_encode($usersData);
-} else {
-    echo "Houve um problema ao obter os usuários.";
 }
-?>
+$teste = new DbConnect();
